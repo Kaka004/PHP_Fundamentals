@@ -9,5 +9,4 @@ $usuario = "admin";
 $senha = "123";
 #link de conexão com o banco
 $link = mysqli_connect($servidor, $usuario, $senha, $banco);
-echo ("Deu bom, fera");
 ?>

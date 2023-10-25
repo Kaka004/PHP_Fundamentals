@@ -12,16 +12,18 @@
     #COLETA O BOTÃO MÉTODO POST VINDO DO HTML
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $ativo = $_POST['ativo'];
-
-        #VERIFICA SE O USUARIO ESTÁ ATIVO PARA LISTA, SE 'S' LISTA SENÃO, NÃO LISTA
+    
         if ($ativo == 's') {
             $sql = "SELECT * FROM produtos WHERE pro_ativo = 's'";
-            $retorno = mysqli_query($link, $sql);
-        } else {
+        } elseif ($ativo == 'n') {
             $sql = "SELECT * FROM produtos WHERE pro_ativo = 'n'";
-            $retorno = mysqli_query($link, $sql);
+        } else {
+            $sql = "SELECT * FROM produtos"; // Isso seleciona todos os produtos.
         }
+    
+        $retorno = mysqli_query($link, $sql);
     }
+    
 ?>
 
 
@@ -41,6 +43,10 @@
                 <br>
                 <input type="radio" name="ativo" class="radio" value="n"
                 required onclick="submit()" <?= $ativo == 'n' ? "checked" : "" ?>>INATIVOS
+                <br>
+                <input type="radio" name="ativo" class="radio" value="todos" 
+                required onclick="submit()" <?= $ativo == 'todos' ? "checked" : "" ?>>TODOS
+
             </form>
             <div class="container">
                 <table border="1">
@@ -65,12 +71,15 @@
                             <td><?=$tbl[1] ?></td> <!--TRAZ SOMENTE A COLUNA 1 [NOME] DO BANCO -->
                             <td><?=$tbl[2] ?></td>
                             <td><?=$tbl[3] ?></td>
-                            <td><?=$tbl[4] ?></td>
-                            <td><?=$tbl[5] ?></td>
-                            <!-- AO CLICAR NO BOTÃO ELE JÁ TRARÁ O ID DO USUÁRIO PARA A PÁGINA DO ALTERUSUARIO -->
+                            <td>R$: <?=$tbl[4] ?></td>
+                            <td><img src="data:image/jpeg;base64,<?= $tbl[6] ?>" width="100" height="100"></td>
                             <td><a href="alteraproduto.php?id=<?=$tbl[0] ?>"><input type="button" value="ALTERAR DADOS"></a></td>
-
-                            <td><?= $check = ($tbl[3] == "s") ? "SIM" : "NÃO" ?></td>
+                            
+                            <!-- AO CLICAR NO BOTÃO ELE JÁ TRARÁ O ID DO USUÁRIO PARA A PÁGINA DO ALTERUSUARIO -->
+                            <td><?= $check = ($tbl[5] == "s") ? "SIM" : "NÃO" ?></td>
+                            
+                            
+                            
 
                         </tr>
                     <?php
@@ -81,3 +90,5 @@
         </div>
     </body>
 </html>
+
+

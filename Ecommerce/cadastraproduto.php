@@ -12,6 +12,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $quantidade = $_POST['quantidade'];
     $imagem = $_POST['imagem'];
 
+
+
+    if(isset($_FILES['imagem']) && $_FILES['imagem']
+    ['error'] === UPLOAD_ERR_OK){
+        $tipo = exif_imagetype($_FILES['imagem']['tmp_name']);
+
+        if($tipo !== false) {
+            $imagem_temp = $_FILES['imagem']['tmp_name'];
+            $imagem = file_get_contents($imagem_temp);
+            $image_base64 = base64_encode($imagem);
+            ;
+        } else {
+                $imagem = file_get_contents
+                ("C:\\xamp\\htdocs\\Ecommerce\\img\\alert.jpg");
+                $image_base64 = base64_encode($imagem);
+            }
+        
+    } else {
+        $imagem = file_get_contents
+                ("C:\\xamp\\htdocs\\Ecommerce\\img\\alert.jpg");
+                $image_base64 = base64_encode($imagem);
+    }
     
     $sql = "SELECT COUNT(pro_id) FROM produtos WHERE pro_nome = '$nome' AND pro_ativo = 's'";
     $retorno = mysqli_query($link, $sql);
@@ -23,13 +45,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>window.alert('PRODUTO JÁ CADASTRADO!');</script>";
     }
     else{
-        $sql = "INSERT INTO produtos (pro_nome, pro_quantidade, pro_valor, pro_descricao, pro_imagem, pro_ativo) VALUES('$nome','$quantidade','$valor','$descricao','$imagem','n')";
+        $sql = "INSERT INTO produtos (pro_nome, pro_quantidade, pro_preco, pro_descricao, imagem1, pro_ativo) VALUES('$nome','$quantidade','$valor','$descricao','$imagem','n')";
         mysqli_query($link, $sql);
         echo "<script>window.alert('PRODUTO CADASTRADO!');</script>";
         echo "<script>window.location.href='cadastraproduto.php';</script>";
     }
 }
-?>
+?> 
+
 
 
 
