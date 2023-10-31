@@ -1,5 +1,5 @@
 <?php
-include("conectadb.php");
+include("cabecalho.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];

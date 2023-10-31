@@ -1,12 +1,17 @@
 <?php
 //*INICIA A CONEXÃO COM O BANCO DE DADOS
-include("conectadb.php");
+include("cabecalho.php");
 //*COLETA DE VARIÁVEIS VIA FORMULÁRIO DE HTML
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'];
     $senha = $_POST['senha'];
     //*PASSANDO INSTRUÇÕES SQL PARA O BANCO
 
+    if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])/', $senha)) {
+        #(?=.*[a-z]): Pelo menos 1 letra minúscula.
+        #(?=.*[A-Z]): Pelo menos 1 letra maiúscula.
+        #(?=.*\d): Pelo menos 1 numeral.
+        #(?=.*[^a-zA-Z\d]): Pelo menos 1 caractere especial 
     //*VALIDANDO SE USUARIO EXISSTE
     $sql = "SELECT COUNT(usu_id) FROM usuarios WHERE usu_nome = '$nome' AND usu_senha = '$senha' AND usu_ativo = 's'";
     $retorno = mysqli_query($link, $sql);
@@ -18,11 +23,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>window.alert('USUÁRIO JÁ CADASTRADO!');</script>";
     }
     else{
-        $sql = "INSERT INTO usuarios (usu_nome, usu_senha, usu_ativo) VALUES('$nome','$senha','n')";
+
+        $tempero =md5(rand() . date('H:i:s'));
+        $senha =md5($senha . $tempero);
+
+        $sql = "INSERT INTO usuarios (usu_nome, usu_senha, usu_ativo, usu_tempero)
+        VALUES('$nome','$senha','n','$tempero')";
+
+        echo($sql);
         mysqli_query($link, $sql);
         echo "<script>window.alert('USUÁRIO CADASTRADO!');</script>";
         echo "<script>window.location.href='cadastrausuario.php';</script>";
     }
+}else{echo "<script>window.alert('SENHA INVALIDA!');</script>";}
 }
 ?>
 <html>

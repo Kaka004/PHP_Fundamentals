@@ -1,6 +1,6 @@
 <?php
 //*INICIA A CONEXÃO COM O BANCO DE DADOS 
-include("conectadb.php");
+include("cabecalho.php");
 
 //*COLETA DE VARIÁVEIS VIA FORMULÁRIO DE HTML
 if($_SERVER["REQUEST_METHOD"] == "POST") {

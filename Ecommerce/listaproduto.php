@@ -1,6 +1,6 @@
 <?php
     #ABRE UMA CONEXÃO COM O BANCO DE DADOS
-    include("conectadb.php");
+    include("cabecalho.php");
 
     #PASSANDO UMA INSTRUÇÃO AO BANCO DE DADOS
     $sql = "SELECT * FROM produtos WHERE pro_ativo = 's'";
