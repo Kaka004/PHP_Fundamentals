@@ -6,15 +6,15 @@ if($_SERVER ['REQUEST_METHOD']== 'POST') {
     $ativo = $_POST['ativo'];
     $senha = $_POST['senha'];
 
-    //$sql = "SELECT usu_tempero FROM usuarios WHERE usu_nome = '$nome'";
-    //$retorno = mysqli_query($link, $sql);
-    //while($tbl = mysqli_fetch_array($retorno)) {
-    //    $tempero = $tbl[0];
-    //}
-    //if ($senha != $senha2)
-    //{
-        //$senha = md5($senha . $tempero);
-    //}
+    $sql = "SELECT usu_tempero FROM usuarios WHERE usu_nome = '$nome'";
+    $retorno = mysqli_query($link, $sql);
+    while($tbl = mysqli_fetch_array($retorno)) {
+        $tempero = $tbl[0];
+    }
+    if ($senha != $senha2)
+    {
+        $senha = md5($senha . $tempero);
+    }
     $sql = "UPDATE usuarios SET usu_senha = '$senha', usu_nome = '$nome'
     , usu_ativo = '$ativo' WHERE usu_id = $id";
 
@@ -62,8 +62,7 @@ while ($tbl = mysqli_fetch_array($retorno)) {
         <?= $ativo == "s" ? "checked" : "" ?>>ATIVO<br>
         <input type="radio" name="ativo" value="n"
         <?= $ativo == "n" ? "checked" : "" ?>>INATIVO
-
-
+        <br>
         <input type="submit" value="SALVAR">
     </form>
     </div>

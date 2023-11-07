@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
         echo($sql);
         mysqli_query($link, $sql);
-        echo "<script>window.alert('USUÁRIO CADASTRADO!');</script>";
+        //echo "<script>window.alert('USUÁRIO CADASTRADO!');</script>";
         echo "<script>window.location.href='cadastrausuario.php';</script>";
     }
 }else{echo "<script>window.alert('SENHA INVALIDA!');</script>";}

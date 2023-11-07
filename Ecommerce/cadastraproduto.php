@@ -24,14 +24,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $image_base64 = base64_encode($imagem);
             ;
         } else {
-                $imagem = file_get_contents
-                ("C:\\xamp\\htdocs\\Ecommerce\\img\\alert.jpg");
+                $imagem = file_get_contents("C:\\xampp\\htdocs\\Ecommerce\\img\\alert.jpg");
                 $image_base64 = base64_encode($imagem);
             }
         
     } else {
-        $imagem = file_get_contents
-                ("C:\\xamp\\htdocs\\Ecommerce\\img\\alert.jpg");
+        $imagem = file_get_contents("C:\\xampp\\htdocs\\Ecommerce\\img\\alert.jpg");
                 $image_base64 = base64_encode($imagem);
     }
     
@@ -45,7 +43,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>window.alert('PRODUTO JÁ CADASTRADO!');</script>";
     }
     else{
-        $sql = "INSERT INTO produtos (pro_nome, pro_quantidade, pro_preco, pro_descricao, imagem1, pro_ativo) VALUES('$nome','$quantidade','$valor','$descricao','$imagem','n')";
+        $sql = "INSERT INTO produtos (pro_nome, pro_quantidade, pro_preco, pro_descricao, imagem1, pro_ativo) VALUES('$nome','$quantidade','$valor','$descricao','$image_base64','n')";
+        echo $sql;
         mysqli_query($link, $sql);
         echo "<script>window.alert('PRODUTO CADASTRADO!');</script>";
         echo "<script>window.location.href='cadastraproduto.php';</script>";

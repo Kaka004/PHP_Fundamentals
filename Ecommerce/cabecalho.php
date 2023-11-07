@@ -9,10 +9,12 @@ $nomeusuario = $_SESSION['nomeusuario'];
     <ul class="menu">
         <li><a href="cadastrausuario.php">CADASTRAR USUARIO</a></li>
         <li><a href="listausuario.php">LISTAR USUARIO</a></li>
-        <li><a href="cadastraproduto.php">CADASTRAR USUARIO</a></li>
+        <li><a href="cadastraproduto.php">CADASTRAR PRODUTO</a></li>
         <li><a href="listaproduto.php">LISTAR PRODUTO</a></li>
-        <!-- <li><a href="listacliente.php">LISTAR CLIENTES</a></li>
-        <li><a href="vendas.php">VENDAS</a></li> -->
+        <li><a href="login-cliente.php">LOGIN CLIENTE</a></li>
+        <li><a href="cadastro-cliente.php">CADASTRAR CLIENTE</a></li>
+        <!--<li><a href="listacliente.php">LISTAR CLIENTES</a></li>
+         <li><a href="vendas.php">VENDAS</a></li> -->
         <li class="menuloja"><a href="logout.php">SAIR</a></li>
 
         <?php 
