@@ -56,16 +56,74 @@ if($idusuario <= 0){
             while($tbl = mysqli_fetch_array($retorno)){
                 $numerocarrinhocliente = $tbl[0];
                 $_SESSION['carrinhoid'] = $numerocarrinhocliente;
+                
+                #VERIFICA SE JÁ EXISTE ESSE ITEM NO CARRINHO
+                #SE JA EXISTE, ATUALIZA A QUANTIDADE
+                $sql2 = "SELECT car_item_quantidade FROM item_carrinho WHERE
+                fk_car_id = '$numerocarrinhocliente' AND fk_pro_id = '$id'";
+                $retorno2 = mysqli_query($link, $sql2);
+                $qtd_atual = mysqli_fetch_array($retorno2);
+                if($retorno2) {
+                    if(mysqli_num_rows($retorno2) >= 1){
+                        $sql = "SELECT item_carrinho SET car_item_quantidade = ($quantidade+$qtd_atual[0])
+                        WHERE fk_car_id = '$numerocarrinhocliente' AND fk_pro_id = $id";
+                        mysqli_query($link, $sql);
+                        echo "<script>window.alert('PRODUTO ADICIONADO AO CARRINHO $numerocarrinhocliente');</script>";
+                        echo "<script>window.location.href='loja.php';</script>";
+                    }
+                    #SE JA EXISTE, ADICIONA O NOVO ITEM
+                    else{
+                        $sql = "SELECT INTO `item_carrinho`(`fk_car_id`,
+                         `fk_pro_id`, `car_item_quantidade`)
+                        VALUES ($numerocarrinhocliente, $id, $quantidade)";
+                        mysqli_query($link, $sql);
+                        echo "<script>window.alert('PRODUTO ADICIONADO AO CARRINHO $numerocarrinhocliente');</script>";
+                        echo "<script>window.location.href = 'loja.php';</script>";
+                    }
+
+                }
+
             }
         }
 
     }
 
 }
+        echo "<script>window.location.href='loja.php';</script>";
+        exit();
 }
 
+$id = $_GET["id"];
+$sql =  "SELECT * FROM produtos WHERE pro_id = '$id'";
+$retorno = mysqli_query($link, $sql);
+while($tbl = mysqli_fetch_array($retorno)){
+    $id = $tbl[0];
+    $nomeproduto = $tbl[3];
+    $descricao = $tbl[2];
+    $preco = $tbl[4];
+    $imagem_atual = $tbl[6];
+}
 
+#CORAÇÃOZINHO DO FAVORITOS
+
+if(isset($idusuario)) {
+    $sql = "SELECT COUNT(fav_id) FROM favoritos WHERE fac_cli_id 
+    = $idusuario AND fav_pro_id = $id";
+    $retorno = mysqli_query($link, $sql);
+
+    while($tbl = mysqli_fetch_array($retorno)){
+        $cont = $tbl[0];
+        if($cont <= 0){
+            $coracao = "";
+        } else {
+            $coracao = "";
+        }
+    }
+} else {
+    $coracao = "";
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

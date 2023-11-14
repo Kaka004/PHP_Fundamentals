@@ -1,7 +1,7 @@
 <?php
 session_start();//INICIA A SESSÃO
 
-include("conectadb.php");
+include("cabecalho2.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = $_POST['email'];
