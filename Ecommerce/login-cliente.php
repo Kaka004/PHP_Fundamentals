@@ -1,67 +1,81 @@
 <?php
-session_start();//INICIA A SESSÃO
+    session_start();//*Inicia a sessão (permite o uso de variáveis de sessão)
 
-include("cabecalho2.php");
+    # Não pode haver o cabeçalho aqui, pois não há uma sessão iniciada.
+    # As variáveis de conexão com o banco são retiradas diretamente.
+    include("cabecalho2.php");
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
+    if ($_SERVER['REQUEST_METHOD'] == "POST"){
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
 
-    #busca o tempero
-    $sql = "SELECT cli_tempero FROM clientes WHERE cli_email = '$email'";
-    $retorno = mysqli_query($link, $sql);
-    while ($tbl = mysqli_fetch_array($retorno)) {
-        $tempero = $tbl[0];
-    }
-
-    $senha = md5($senha . $tempero);
-
-    $sql = "SELECT COUNT(cli_id) FROM clientes WHERE cli_email = '$email' 
-    AND cli_senha = '$senha'";
-    $retorno = mysqli_query($link, $sql);
-    while ($tbl = mysqli_fetch_array($retorno)) {
-        $cont = $tbl[0];
-    }
-
-    if ($cont == 1) {
-        $sql = "SELECT * FROM clientes WHERE cli_email = '$email' AND 
-        cli_senha = '$senha' AND cli_ativo = 's'";
+        # Confere se o usuário existe
+        $sql = "SELECT count(cli_id) FROM clientes WHERE cli_email = '$email'";
         $retorno = mysqli_query($link, $sql);
-        while ($tbl = mysqli_fetch_array($retorno)) {
-            $_SESSION['idcliente'] = $tbl[0];
-            $_SESSION['emailcliente'] = $tbl[10];
+        $tbl = mysqli_fetch_array($retorno);
+        if($tbl[0] == 0){
+            echo "<script> window.alert('Cliente não cadastrado!'); </script>";
+            echo "<script>window.location.href='login-cliente.php';</script>";
         }
-        #echo $_SESSION['nomeusuario'];
-        echo "<script>window.location.href='listaclientes.php';</script>";
-    } else {
-        echo "<script>window.alert('E-MAIL OU SENHA INCORRETOS');</script>";
-        echo "<script>window.location.href='cadastro-cliente.php';</script>";
+        else{
+            # Busca o tempero
+            $sql = "SELECT cli_tempero FROM clientes WHERE cli_email = '$email'";
+            $retorno = mysqli_query($link, $sql);
+            $tempero = mysqli_fetch_array($retorno)[0];
+            # $tempero = $tbl[0];
+    
+            # Cria uma hashe md5, concatenando a senha digitada no login com o
+            # tempero no banco de dados. Essa hashe deve ser exatamente igual à
+            # hashe no campo 'usu_senha' do respectivo usuário.
+            $senha = md5($senha . $tempero);
+    
+            # Conta quantos usuários com 'usu_nome' possuem essa $senha no banco
+            # de dados.
+            $sql = "SELECT COUNT(cli_id) FROM clientes WHERE cli_email = '$email' AND cli_senha = '$senha'";
+            $retorno = mysqli_query($link, $sql);
+            while ($tbl = mysqli_fetch_array($retorno)) {
+                $cont = $tbl[0];
+            }
+    
+            # Se houver no mínimo uma pessoa com exatamente esse nome de usuário
+            # e exatamente essa senha que é a hashe md5 criada a partir do mesmo
+            # princípio utilizado no cadastro do usuário, utilizando-se do campo
+            # 'usu_tempero', cria duas variáveis de sessão: 'idusuario' e 'nomeusuario',
+            # com o ID e o Nome do usuário.
+            #
+            # Se não, diz que o usuário ou senha estão incorretos e retorna ao formulário.
+            if($cont == 1){
+                $sql = "SELECT cli_id, cli_nome FROM clientes WHERE cli_email = '$email' AND cli_senha = '$senha' AND cli_ativo = 's'";
+                $retorno = mysqli_query($link, $sql);
+                while ($tbl = mysqli_fetch_array($retorno)) {
+                    $_SESSION['idusuario'] = $tbl[0];
+                    $_SESSION['nomeusuario'] = $tbl[1];
+                }
+                # Manda o usuário para a lista de usuários
+                echo "<script> window.location.href='loja.php'; </script>";
+            } else {
+                echo "<script> window.alert('Usuário ou senha incorretos!'); </script>";
+            }
+        }
     }
-}
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/estiloadm.css">
-    <title>LOGIN DO CLIENTE</title>
-</head>
-
-<body>
-
-
-    <form action="login.php" method="POST">
-        <h1>LOGIN DO CLIENTE</h1>
-        <input type="text" name="email" id="email" placeholder="E-mail">
-        <p></p>
-        <input type="password" id="senha" name="senha" placeholder="Senha">
-        <p></p>
-        <input type="submit" name="login" value="LOGIN">
-    </form>
-
-</body>
-
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./css/estiloadm.css">
+        <title>Login do Cliente</title>
+    </head>
+    <body>
+        <form action="Login Cliente.php" method="POST">
+            <h1>Login do Cliente</h1>
+            <input type="text" name="email" id="email" placeholder="Email">
+            <p></p>
+            <input type="password" id="senha" name="senha" placeholder="Senha">
+            <p></p>
+            <input type="submit" name="login" value="LOGIN">
+    
+        </form>
+    </body>
 </html>

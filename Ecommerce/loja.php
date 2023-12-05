@@ -1,55 +1,53 @@
-<?php
-    #ABRE UMA CONEXÃO COM O BANCO DE DADOS
-    include("cabecalho2.php");
- 
-    #PASSANDO UMA INSTRUÇÃO AO BANCO DE DADOS
-    $sql = "SELECT * FROM produtos WHERE pro_ativo = 's'";
-    $retorno = mysqli_query($link, $sql);
- 
-    #COLETA O BOTÃO MÉTODO POST VINDO DO HTML
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $sql = "SELECT * FROM produtos WHERE pro_ativo = 's'";
-            $retorno = mysqli_query($link, $sql);
-    }
-?>
+<!DOCTYPE html>
+<html lang="pt-br">
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE-edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./css/lojaphp.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-        <title>LOJA</title>
-    </head>
-    <main>
-        <section id="creditos-container">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja</title>
+    <link rel="stylesheet" href="./Css/estiloadm.css">
+</head>
+
+<body>
+    <?php
+
+    include("cabecalho2.php");
+
+    ?>
+
+    <div style="width: 100%; height:10px; background-color:transparent; text-align:center;">
+        <?php
+        
+        $query = "SELECT * FROM produtos WHERE pro_ativo = 's'";
+        $result = mysqli_query($link, $query);
+
+        while($tbl = mysqli_fetch_array($result)){
+
+        ?>
+        <div class="product-card">
+            <img src="data:image/jpeg;base64,<?=$tbl[6]?>" alt="Imagem do produto">
+            <h3 class="product-title"><?=$tbl[1]?></h3>
+            <h3 class="product-price">R$ <?=number_format($tbl[4], 2, ',', '.')?></h3>
+            
             <?php
-            while ($tbl = mysqli_fetch_array($retorno)) {
+            if ($tbl[3] > 0){
             ?>
-            <div class="profile">
-                <img src="data:image/jpeg;base64,<?=$tbl[5] ?>" alt="Product Image">
-                <hr>
-                <h3 class="product-title"><?=$tbl[1] ?></h3>
-               
-                <?php
-                if ($tbl[3] > 0) {
-                ?>
-                    <h3 class="product-price">R$ <?=$tbl[4] ?></h3>
-                    <button class="product-button" onclick="location.href='verproduto.php?id=<?= $tbl[0] ?>'" >Comprar</button>
-                <?php
-                } else { //FORA DE ESTOQUE
-                ?>
-                <span class="product-stock">Fora de Estoque</span>
-                <?php
-                }
-                ?>
-            </div>
+
+            <button onclick="location.href='Ver Produto.php?id=<?=$tbl[0]?>'" class="product-button">Comprar</button>
+            
+            <?php
+            } else{
+            ?>
+
+            <button class="product-button2">Fora de estoque</button> 
+            
             <?php
             }
             ?>
-        </section>
-    </main>
+        </div>
+        <?php
+        }
+        ?>
+    </div>
+</body>
 </html>
